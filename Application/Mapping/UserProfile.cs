@@ -18,7 +18,6 @@ namespace Application.Mapping
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Providers, opt => opt.Ignore());
 
-            >
         }
     }
 }

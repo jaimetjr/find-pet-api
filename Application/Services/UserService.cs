@@ -23,7 +23,7 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<UserDto?> AuthWithEmailAsync(LoginUserDto login)
+        public async Task<User?> AuthWithEmailAsync(LoginUserDto login)
         {
             var user = await _userRepository.GetByEmailAsync(login.Email);
             if (user == null || user.Providers == null)
@@ -35,10 +35,18 @@ namespace Application.Services
             bool valid = PasswordHasher.VerifyPassword(login.Password, provider.PasswordHash, provider.PasswordSalt);
             if (!valid)
                 return null;
-            return _mapper.Map<UserDto>(user);
+            return user;
         }
 
-        public async Task<UserDto?> RegisterWithEmailAsync(RegisterUserDto register)
+        public async Task<User> GetByIdAsync(Guid id)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+                throw new Exception("User not found");
+            return user;
+        }
+
+        public async Task<User?> RegisterWithEmailAsync(RegisterUserDto register)
         {
             var existingUser = await _userRepository.GetByEmailAsync(register.Email);
             if (existingUser != null)
@@ -46,7 +54,7 @@ namespace Application.Services
 
             var (hash, salt) = PasswordHasher.HashPassword(register.Password);
 
-            var user = new User(register.Name, register.Email, register.Notifications);
+            var user = new User(register.Email, register.Name, register.Notifications);
             user.SetAdditionalInfo(register.Avatar, register.Phone, register.Location, register.Bio);
 
             var provider = new Provider(user.Id, ProviderType.Password, register.Email);
@@ -56,7 +64,7 @@ namespace Application.Services
 
             await _userRepository.AddAsync(user);
 
-            return _mapper.Map<UserDto>(user);
+            return user;
         }
     }
 }

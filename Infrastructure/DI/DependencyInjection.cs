@@ -17,7 +17,7 @@ namespace Infrastructure.DI
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfigurationManager configuration)
         {
-            services.AddDbContext<AppDataContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+            services.AddDbContext<AppDataContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUserRepository, UserRepository>();

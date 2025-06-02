@@ -10,18 +10,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class UserRepository(AppDataContext context) : Repository<User>(context), IUserRepository
     {
-        private readonly AppDataContext _context;
-
-        public UserRepository(AppDataContext context) : base(context)
-        {
-            _context = context;
-        }
-
         public async Task<User?> GetByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return await _context.Users.Include(x => x.Providers).FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<User?> GetByProviderAsync(string providerKey, ProviderType providerType)

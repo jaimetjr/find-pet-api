@@ -1,4 +1,5 @@
-﻿using Infrastructure.DI;
+﻿using Application.DI;
+using Infrastructure.DI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 namespace IoC
@@ -8,6 +9,7 @@ namespace IoC
         public static IServiceCollection AddAllDependencies(this IServiceCollection services, IConfigurationManager configuration)
         {
             services.AddInfrastructureServices(configuration);
+            services.AddApplicationServices(configuration);
             return services;
         }
 
