@@ -1,5 +1,8 @@
 using Application.Security;
+using API.Middleware;
+using API.Configuration;
 using IoC;
+using Infrastructure.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -7,15 +10,22 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure logging through Infrastructure layer
+builder.Host.ConfigureLogging();
+
 // Add services to the container.
 
-var defaultLanguage = builder.Configuration.GetSection("Localization:DefaultLocalization").Value;
+// Configure settings
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<AzureBlobStorageSettings>(builder.Configuration.GetSection("AzureBlobStorage"));
+builder.Services.Configure<LocalizationSettings>(builder.Configuration.GetSection("Localization"));
+
+var localizationSettings = builder.Configuration.GetSection("Localization").Get<LocalizationSettings>();
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-var supportedCultures = new[] { "en", "pt-BR" };
 var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(defaultLanguage!)
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures);
+    .SetDefaultCulture(localizationSettings?.DefaultLocalization ?? "en")
+    .AddSupportedCultures(localizationSettings?.SupportedCultures ?? new[] { "en", "pt-BR" })
+    .AddSupportedUICultures(localizationSettings?.SupportedCultures ?? new[] { "en", "pt-BR" });
 
 builder.Services.AddControllers()
     .AddDataAnnotationsLocalization()
@@ -27,7 +37,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAllDependencies(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-var jwtSettings = builder.Configuration.GetSection("Jwt");
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.Authority = "https://nice-primate-85.clerk.accounts.dev";
@@ -100,8 +110,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
-app.UseAuthentication();
 
+// Add request logging middleware
+app.UseMiddleware<RequestLoggingMiddleware>();
+
+// Add global exception handler
+app.UseMiddleware<GlobalExceptionHandler>();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

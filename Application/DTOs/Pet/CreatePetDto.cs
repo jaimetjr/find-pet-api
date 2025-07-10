@@ -15,6 +15,7 @@ namespace Application.DTOs.Pet
         public string Name { get; set; } = default!;
         public PetTypeDto Type { get; set; } = default!;
         public PetBreedDto Breed { get; set; } = default!;
+        public PetGender Gender { get; set; } = default!;
         public int Age { get; set; } = default!;
         public PetSize Size { get; set; } = default!;
         public string Bio { get; set; } = default!;

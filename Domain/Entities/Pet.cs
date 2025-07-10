@@ -8,6 +8,7 @@ namespace Domain.Entities
         public string Name { get; private set; }
         public Guid TypeId { get; private set; }
         public Guid BreedId { get; private set; }
+        public PetGender Gender { get;  private set; }
         public PetType Type { get; private set; }
         public PetBreed Breed { get; private set; }
         public PetSize Size { get; private set; }
@@ -27,7 +28,7 @@ namespace Domain.Entities
         public Pet() { }
 
         public void SetPet(string userId, string name, PetSize size, string bio, string history,
-            string address, string neighborhood, string cep, string state, string city, string number, int age, string? complement)
+            string address, string neighborhood, string cep, string state, string city, string number, int age, PetGender gender, string? complement)
         {
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
@@ -43,6 +44,7 @@ namespace Domain.Entities
             City = city;
             Number = number;
             Age = age;
+            Gender = gender;
             Complement = complement;
         }
 

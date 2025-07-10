@@ -2,14 +2,20 @@
 using Application.Interfaces.Services;
 using Application.Security;
 using Application.Services;
+using Application.Validators.Pet;
+using Application.Validators.User;
 using Azure.Storage.Blobs;
+using FluentValidation;
+using Infrastructure.Configuration;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Infrastructure.Storage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 namespace IoC
 {
     public static class DependencyInjection
@@ -29,6 +35,15 @@ namespace IoC
             services.AddScoped<IFileStorageService, AzureBlobStorageService>();
             services.AddScoped<IPetService, PetService>();
             services.AddScoped<IPetRepository, PetRepository>();
+
+            // Add FluentValidation
+            services.AddValidatorsFromAssemblyContaining<CreatePetDtoValidator>();
+            services.AddScoped<IValidationService, ValidationService>();
+
+            // Add Logging
+            var logger = LoggingConfiguration.CreateLogger();
+            services.AddSingleton<ILogger>(logger);
+            services.AddScoped<ILoggingService, SerilogLoggingService>();
 
             services.AddSingleton(serviceProvider =>
             {

@@ -162,4 +162,85 @@
   <data name="UserAlreadyExists" xml:space="preserve">
     <value>Usuário já existe com o e-mail informado.</value>
   </data>
+  <data name="PetNameRequired" xml:space="preserve">
+    <value>Nome do pet é obrigatório</value>
+  </data>
+  <data name="PetNameLength" xml:space="preserve">
+    <value>Nome do pet não pode exceder 100 caracteres</value>
+  </data>
+  <data name="PetNameFormat" xml:space="preserve">
+    <value>Nome do pet pode conter apenas letras e espaços</value>
+  </data>
+  <data name="AgeRequired" xml:space="preserve">
+    <value>Idade é obrigatória</value>
+  </data>
+  <data name="AgeRange" xml:space="preserve">
+    <value>Idade deve estar entre 1 e 30 anos</value>
+  </data>
+  <data name="BioRequired" xml:space="preserve">
+    <value>Biografia é obrigatória</value>
+  </data>
+  <data name="HistoryRequired" xml:space="preserve">
+    <value>Histórico é obrigatório</value>
+  </data>
+  <data name="AddressRequired" xml:space="preserve">
+    <value>Endereço é obrigatório</value>
+  </data>
+  <data name="NeighborhoodRequired" xml:space="preserve">
+    <value>Bairro é obrigatório</value>
+  </data>
+  <data name="CityRequired" xml:space="preserve">
+    <value>Cidade é obrigatória</value>
+  </data>
+  <data name="StateRequired" xml:space="preserve">
+    <value>Estado é obrigatório</value>
+  </data>
+  <data name="CEPRequired" xml:space="preserve">
+    <value>CEP é obrigatório</value>
+  </data>
+  <data name="CEPFormat" xml:space="preserve">
+    <value>CEP deve estar no formato 12345-678 ou 12345678</value>
+  </data>
+  <data name="NumberRequired" xml:space="preserve">
+    <value>Número é obrigatório</value>
+  </data>
+  <data name="PetTypeRequired" xml:space="preserve">
+    <value>Tipo do pet é obrigatório</value>
+  </data>
+  <data name="PetBreedRequired" xml:space="preserve">
+    <value>Raça do pet é obrigatória</value>
+  </data>
+  <data name="UserIdRequired" xml:space="preserve">
+    <value>ID do usuário é obrigatório</value>
+  </data>
+  <data name="ClerkIdRequired" xml:space="preserve">
+    <value>ID do Clerk é obrigatório</value>
+  </data>
+  <data name="ProviderRequired" xml:space="preserve">
+    <value>Provedor é obrigatório</value>
+  </data>
+  <data name="CPFRequired" xml:space="preserve">
+    <value>CPF é obrigatório</value>
+  </data>
+  <data name="CPFFormat" xml:space="preserve">
+    <value>CPF deve estar no formato 123.456.789-01 ou 12345678901</value>
+  </data>
+  <data name="BirthDateInvalid" xml:space="preserve">
+    <value>Data de nascimento não pode ser no futuro</value>
+  </data>
+  <data name="BirthDateRange" xml:space="preserve">
+    <value>Data de nascimento parece inválida</value>
+  </data>
+  <data name="PhoneFormat" xml:space="preserve">
+    <value>Formato de telefone inválido</value>
+  </data>
+  <data name="FieldLength10" xml:space="preserve">
+    <value>Campo é muito longo. Máx: 10</value>
+  </data>
+  <data name="FieldLength50" xml:space="preserve">
+    <value>Campo é muito longo. Máx: 50</value>
+  </data>
+  <data name="FieldLength1000" xml:space="preserve">
+    <value>Campo é muito longo. Máx: 1000</value>
+  </data>
 </root>

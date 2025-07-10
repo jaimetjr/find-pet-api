@@ -16,7 +16,8 @@ namespace Application.Mapping
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.Providers, opt => opt.Ignore());
+                .ForMember(dest => dest.Providers, opt => opt.Ignore())
+                .ForMember(dest => dest.Pets, opt => opt.Ignore());
 
         }
     }

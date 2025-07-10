@@ -18,39 +18,55 @@ namespace Application.Services
         private readonly IRepository<PetImages> _petImagesRepository;
         private readonly IMapper _mapper;
         private readonly IFileStorageService _fileStorageService;
+        private readonly IValidationService _validationService;
+        private readonly ILoggingService _loggingService;
 
-
-        public PetService(IPetRepository petRepository, IMapper mapper, IFileStorageService fileStorageService, IRepository<PetImages> petImagesRepository)
+        public PetService(IPetRepository petRepository, IMapper mapper, IFileStorageService fileStorageService, IRepository<PetImages> petImagesRepository, IValidationService validationService, ILoggingService loggingService)
         {
             _petRepository = petRepository;
             _mapper = mapper;
             _fileStorageService = fileStorageService;
             _petImagesRepository = petImagesRepository;
+            _validationService = validationService;
+            _loggingService = loggingService;
         }
 
         public async Task<Result<PetDto>> CreatePetAsync(CreatePetDto model)
         {
-            //var pet = _mapper.Map<Pet>(model);
-            var pet = new Pet();
+            _loggingService.LogInformation("Creating pet for user {UserId}", model.UserId);
+            
+            // Validate the model
+            var validationResult = await _validationService.ValidateAsync(model);
+            if (!_validationService.IsValid(validationResult))
+            {
+                var errors = _validationService.GetErrors(validationResult);
+                _loggingService.LogWarning("Pet creation validation failed for user {UserId}. Errors: {Errors}", 
+                    model.UserId, string.Join(", ", errors));
+                return Result<PetDto>.Fail(errors.ToArray());
+            }
 
-            pet.SetPet(model.UserId, model.Name,
-                model.Size, model.Bio, model.History, model.Address, model.Neighborhood, model.CEP,
-                model.CEP, model.City, model.Number, model.Age, model.Complement);
+            try
+            {
+                var pet = new Pet();
 
-            pet.SetTypeAndBreed(model.Type.Id, model.Breed.Id);
+                pet.SetPet(model.UserId, model.Name,
+                    model.Size, model.Bio, model.History, model.Address, model.Neighborhood, model.CEP,
+                    model.CEP, model.City, model.Number, model.Age, model.Gender, model.Complement);
 
-            await _petRepository.AddAsync(pet);
+                pet.SetTypeAndBreed(model.Type.Id, model.Breed.Id);
 
-            //if (model.PetImages.Any())
-            //{
-            //    foreach (var item in model.PetImages)
-            //    {                    
-            //        var url = _fileStorageService.UploadAsync(item, "pets");
-            //        var petImages = new PetImages(model.UserId, item.FileName, pet.Id);
-            //        await _petImagesRepository.AddAsync(petImages);
-            //    }
-            //}
-            return Result<PetDto>.Ok(new PetDto { Id = pet.Id });
+                await _petRepository.AddAsync(pet);
+
+                _loggingService.LogInformation("Pet created successfully. PetId: {PetId}, UserId: {UserId}", 
+                    pet.Id, model.UserId);
+
+                return Result<PetDto>.Ok(new PetDto { Id = pet.Id });
+            }
+            catch (Exception ex)
+            {
+                _loggingService.LogError("Error creating pet for user {UserId}", ex, model.UserId);
+                return Result<PetDto>.Fail("An error occurred while creating the pet");
+            }
         }
 
         public async Task<Result<bool>> CreatePetImages(CreatePetImagesDto request)
@@ -74,9 +90,23 @@ namespace Application.Services
 
         public async Task<Result<List<PetDto>>> GetAllPetsAsync(string userId)
         {
-            var pets = await _petRepository.GetAllPetsByUserId(userId);
-            var petDtos = _mapper.Map<List<PetDto>>(pets);
-            return Result<List<PetDto>>.Ok(petDtos);
+            _loggingService.LogInformation("Retrieving all pets for user {UserId}", userId);
+            
+            try
+            {
+                var pets = await _petRepository.GetAllPetsByUserId(userId);
+                var petDtos = _mapper.Map<List<PetDto>>(pets);
+                
+                _loggingService.LogInformation("Retrieved {PetCount} pets for user {UserId}", 
+                    petDtos.Count, userId);
+                
+                return Result<List<PetDto>>.Ok(petDtos);
+            }
+            catch (Exception ex)
+            {
+                _loggingService.LogError("Error retrieving pets for user {UserId}", ex, userId);
+                return Result<List<PetDto>>.Fail("An error occurred while retrieving pets");
+            }
         }
 
         public async Task<Result<bool>> DeletePetAsync(Guid id)
@@ -100,6 +130,13 @@ namespace Application.Services
 
         public async Task<Result<PetDto>> UpdatePetAsync(Guid id, UpdatePetDto model)
         {
+            // Validate the model
+            var validationResult = await _validationService.ValidateAsync(model);
+            if (!_validationService.IsValid(validationResult))
+            {
+                return Result<PetDto>.Fail(_validationService.GetErrors(validationResult).ToArray());
+            }
+
             var pet = await _petRepository.GetByIdAsync(id);
             if (pet == null)
                 return Result<PetDto>.Fail("Pet not found");
@@ -107,7 +144,7 @@ namespace Application.Services
             // Update pet properties
             pet.SetPet(model.UserId, model.Name,
                 model.Size, model.Bio, model.History, model.Address, model.Neighborhood, model.CEP,
-                model.CEP, model.City, model.Number, model.Age, model.Complement);
+                model.CEP, model.City, model.Number, model.Age, model.Gender, model.Complement);
             pet.SetTypeAndBreed(model.Type.Id, model.Breed.Id);
 
             await _petRepository.Update(pet);

@@ -13,12 +13,6 @@ namespace Domain.Entities
         public string ClerkId { get; private set; }
         public string Email { get; private set; }
         public string Name { get; private set; }
-        // Pseudocode plan:
-        // 1. Ensure all DateTime properties are always set with DateTimeKind.Utc.
-        // 2. In all constructors and setters, explicitly set DateTime to UTC.
-        // 3. Add a private setter for BirthDate that enforces UTC.
-        // 4. Update all usages to ensure UTC is enforced.
-
         public DateTime BirthDate
         {
             get => _birthDate;
@@ -33,7 +27,7 @@ namespace Domain.Entities
             CPF = cpf;
         }
 
-        public void UpdateProfile(string? avatar, string phone, string bio, DateTime birthDate, string cpf, string address, string neighborhood, string cep, string state, string city, string complement, string number, bool notifications)
+        public void UpdateProfile(string? avatar, string phone, string bio, DateTime birthDate, string cpf, string address, string neighborhood, string cep, string state, string city, string? complement, string number, bool notifications)
         {
             Avatar = avatar;
             Phone = phone;
@@ -61,7 +55,7 @@ namespace Domain.Entities
         public string Bio { get; private set; }
         public bool Notifications { get; private set; }
         public string Number { get; private set; }
-        public string Complement { get; private set; } 
+        public string? Complement { get; private set; } 
         public ApprovalStatus ApprovalStatus { get; private set; }
         public UserRole Role { get; private set; } = UserRole.User;
         public DateTime CreatedAt { get; private set; }

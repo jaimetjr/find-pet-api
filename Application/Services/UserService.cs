@@ -19,12 +19,14 @@ namespace Application.Services
         private readonly IUserRepository _userRepository;
         private readonly IFileStorageService _fileStorageService;
         private readonly IMapper _mapper;
+        private readonly IValidationService _validationService;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IFileStorageService fileStorageService)
+        public UserService(IUserRepository userRepository, IMapper mapper, IFileStorageService fileStorageService, IValidationService validationService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _fileStorageService = fileStorageService;
+            _validationService = validationService;
         }
 
         public async Task<User?> AuthWithEmailAsync(LoginUserDto login)
@@ -54,11 +56,16 @@ namespace Application.Services
 
         public async Task<Result<string>> RegisterWithEmailAsync(RegisterUserDto register)
         {
+            // Validate the model
+            var validationResult = await _validationService.ValidateAsync(register);
+            if (!_validationService.IsValid(validationResult))
+            {
+                return Result<string>.Fail(_validationService.GetErrors(validationResult).ToArray());
+            }
+
             var existingUser = await _userRepository.GetByEmailAsync(register.Email);
             if (existingUser != null)
                 return Result<string>.Fail(ValidationMessages.UserAlreadyExists);
-
-            //var (hash, salt) = PasswordHasher.HashPassword(register.Password);
 
             var user = new User(register.Email, register.Name, register.Phone, register.Notifications);
             user.SetAdditionalInfo(register.Avatar, register.Phone, register.Bio, register.ClerkId);
@@ -73,7 +80,6 @@ namespace Application.Services
             );
 
             var provider = new Provider(user.Id, register.Provider, register.Email);
-            //provider.SetPassword(hash, salt);
 
             user.Providers.Add(provider);
 
@@ -86,6 +92,13 @@ namespace Application.Services
         {
             try
             {
+                // Validate the model
+                var validationResult = await _validationService.ValidateAsync(dto);
+                if (!_validationService.IsValid(validationResult))
+                {
+                    return Result<UserDto>.Fail(_validationService.GetErrors(validationResult).ToArray());
+                }
+
                 var user = await _userRepository.GetByIdAsync(id);
                 if (user == null)
                     return Result<UserDto>.Fail("Usuário não encontrado");

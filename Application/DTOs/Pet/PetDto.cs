@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Application.DTOs.User;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace Application.DTOs.Pet
         public string City { get; set; } = default!;
         public string Number { get; set; } = default!;
         public string? Complement { get; set; } = default!;
+        public UserDto User { get; set; } = default!;
         public List<PetImagesDto> PetImages { get; set; } = new List<PetImagesDto>();
     }
 }
