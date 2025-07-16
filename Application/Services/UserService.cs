@@ -56,19 +56,12 @@ namespace Application.Services
 
         public async Task<Result<string>> RegisterWithEmailAsync(RegisterUserDto register)
         {
-            // Validate the model
-            var validationResult = await _validationService.ValidateAsync(register);
-            if (!_validationService.IsValid(validationResult))
-            {
-                return Result<string>.Fail(_validationService.GetErrors(validationResult).ToArray());
-            }
-
             var existingUser = await _userRepository.GetByEmailAsync(register.Email);
             if (existingUser != null)
                 return Result<string>.Fail(ValidationMessages.UserAlreadyExists);
 
-            var user = new User(register.Email, register.Name, register.Phone, register.Notifications);
-            user.SetAdditionalInfo(register.Avatar, register.Phone, register.Bio, register.ClerkId);
+            var user = new User(register.Email, register.Name, register.Phone, register.Notifications, register.CPF);
+            user.SetAdditionalInfo(register.Phone, register.Bio, register.ClerkId, register.ContactType, register.BirthDate);
             user.SetAddressInformation(
                 register.Address,
                 register.Neighborhood,
@@ -79,10 +72,15 @@ namespace Application.Services
                 register.Number
             );
 
+            if (register.Avatar != null)
+            {
+                var avatarUrl = await _fileStorageService.UploadAsync(register.Avatar, "users");
+                user.SetAvatar(avatarUrl);
+            }
+
             var provider = new Provider(user.Id, register.Provider, register.Email);
 
             user.Providers.Add(provider);
-
             await _userRepository.AddAsync(user);
 
             return Result<string>.Ok("Usuário inserido com sucesso");
@@ -114,7 +112,7 @@ namespace Application.Services
                     avatar = user.Avatar ?? "";
 
                 user.UpdateProfile(avatar, dto.Phone, dto.Bio, dto.BirthDate, dto.CPF,
-                                   dto.Address, dto.Neighborhood, dto.CEP, dto.State, dto.City, dto.Complement, dto.Number, dto.Notifications);
+                                   dto.Address, dto.Neighborhood, dto.CEP, dto.State, dto.City, dto.Complement, dto.Number, dto.Notifications, dto.ContactType);
                 
                 await _userRepository.Update(user);
 

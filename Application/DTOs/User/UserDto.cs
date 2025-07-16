@@ -30,5 +30,6 @@ namespace Application.DTOs.User
         public DateTime UpdatedAt { get; set; }
         public ApprovalStatus ApprovalStatus { get; set; }
         public UserRole Role { get; set; }
+        public ContactType ContactType { get; set; }
     }
 }

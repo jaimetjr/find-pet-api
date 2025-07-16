@@ -9,7 +9,8 @@ namespace Application.Interfaces.Repositories
 {
     public interface IPetRepository : IRepository<Pet>
     {
-        Task<List<Pet>> GetAllPetsByUserId(string userId);
+        Task<List<Pet>> GetAllPets();
+        Task<List<Pet>> GetAllPetsByUserId(string clerkId);
         Task<Pet> GetByPetIdAsync(Guid id);
     }
 }

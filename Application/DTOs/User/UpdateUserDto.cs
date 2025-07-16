@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.Enums;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,5 +24,6 @@ namespace Application.DTOs.User
         public bool Notifications { get; set; } = default!;
         public string Number { get; set; } = default!;
         public string Complement { get; set; } = default!;
+        public ContactType ContactType { get; set; } = default!;
     }
 }

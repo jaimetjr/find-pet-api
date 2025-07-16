@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -28,6 +29,8 @@ namespace Infrastructure.Configurations
             builder.Property(u => u.ClerkId).IsRequired();
             builder.HasIndex(u => u.ClerkId).IsUnique();
             builder.Property(u => u.ClerkId).HasMaxLength(100);
+            builder.Property(u => u.ContactType).IsRequired();
+            builder.Property(u => u.ContactType).HasDefaultValue(ContactType.App);
             builder.Property(u => u.ApprovalStatus)
                 .HasConversion<int>()
                 .IsRequired();
@@ -42,7 +45,7 @@ namespace Infrastructure.Configurations
 
             builder.HasMany(x => x.Pets)
                    .WithOne(p => p.User)
-                   .HasForeignKey(x => x.UserId)
+                   .HasForeignKey(x => x.ClerkId)
                    .HasPrincipalKey(x => x.ClerkId)
                      .OnDelete(DeleteBehavior.Cascade);
         }

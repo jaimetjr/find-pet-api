@@ -16,6 +16,7 @@ namespace Application.DTOs.Pet
         public PetBreedDto Breed { get; set; }
         public Guid TypeId { get; set; }
         public PetTypeDto Type { get; set; }
+        public PetGender Gender { get; set; } = default!;
         public int Age { get; set; }
         public PetSize Size { get; set; } = default!;
         public string Bio { get; set; } = default!;
@@ -27,6 +28,7 @@ namespace Application.DTOs.Pet
         public string City { get; set; } = default!;
         public string Number { get; set; } = default!;
         public string? Complement { get; set; } = default!;
+        public string ClerkId { get; set; } = default!;
         public UserDto User { get; set; } = default!;
         public List<PetImagesDto> PetImages { get; set; } = new List<PetImagesDto>();
     }

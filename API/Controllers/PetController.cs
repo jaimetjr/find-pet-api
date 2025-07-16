@@ -28,12 +28,22 @@ namespace API.Controllers
             return HandleResult(result);
         }
 
+        [HttpGet("GetAllPetsByUser")]
+        [Authorize]
+        public async Task<IActionResult> GetAllPetsByUser()
+        {
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+            var result = await _petService.GetAllPetsByUserIdAsync(userId);
+            return HandleResult(result);
+        }
+
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetAllPets()
         {
-            var userId = GetCurrentUserId();
-            var result = await _petService.GetAllPetsAsync(userId);
+            var result = await _petService.GetAllPetsAsync();
             return HandleResult(result);
         }
 

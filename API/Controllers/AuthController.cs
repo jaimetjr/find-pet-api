@@ -23,7 +23,7 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
+        public async Task<IActionResult> Register([FromForm] RegisterUserDto dto)
         {
             var result = await _userService.RegisterWithEmailAsync(dto);
             return HandleResult(result);

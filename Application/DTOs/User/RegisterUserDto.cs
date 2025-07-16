@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Domain.Enums;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,8 +22,7 @@ namespace Application.DTOs.User
         [MaxLength(30, ErrorMessageResourceType = typeof(Resources.ValidationMessages), ErrorMessageResourceName = "FieldLength30")]
         [Required(ErrorMessageResourceType = typeof(Resources.ValidationMessages), ErrorMessageResourceName = "PhoneRequired")]
         public string Phone { get; set; } = default!;
-
-        public string? Avatar { get; set; }
+        public string CPF { get; set; } = default!;
 
         public string Bio { get; set; } = default!;
 
@@ -32,11 +33,14 @@ namespace Application.DTOs.User
         public string Complement { get; set; } = default!;
         public string State { get; set; } = default!;
         public string City { get; set; } = default!;
-
+        public DateTime BirthDate { get; set; } = default!;
         public string ClerkId { get; set; } = default!;
+        public ContactType ContactType { get; set; } = default!;
 
         public bool Notifications { get; set; } = false;
 
         public ProviderType Provider { get; set; } = default!;
+        public IFormFile? Avatar { get; set; } = default!;
+
     }
 }

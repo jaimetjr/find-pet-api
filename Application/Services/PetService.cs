@@ -88,7 +88,7 @@ namespace Application.Services
             return Result<bool>.Ok(true);
         }
 
-        public async Task<Result<List<PetDto>>> GetAllPetsAsync(string userId)
+        public async Task<Result<List<PetDto>>> GetAllPetsByUserIdAsync(string userId)
         {
             _loggingService.LogInformation("Retrieving all pets for user {UserId}", userId);
             
@@ -108,6 +108,28 @@ namespace Application.Services
                 return Result<List<PetDto>>.Fail("An error occurred while retrieving pets");
             }
         }
+
+        public async Task<Result<List<PetDto>>> GetAllPetsAsync()
+        {
+            _loggingService.LogInformation("Retrieving all pets");
+
+            try
+            {
+                var pets = await _petRepository.GetAllPets();
+                var petDtos = _mapper.Map<List<PetDto>>(pets);
+
+                _loggingService.LogInformation("Retrieved {PetCount} pets",
+                    petDtos.Count);
+
+                return Result<List<PetDto>>.Ok(petDtos);
+            }
+            catch (Exception ex)
+            {
+                _loggingService.LogError("Error retrieving pets", ex);
+                return Result<List<PetDto>>.Fail("An error occurred while retrieving pets");
+            }
+        }
+
 
         public async Task<Result<bool>> DeletePetAsync(Guid id)
         {

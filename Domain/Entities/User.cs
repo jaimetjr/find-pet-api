@@ -27,7 +27,7 @@ namespace Domain.Entities
             CPF = cpf;
         }
 
-        public void UpdateProfile(string? avatar, string phone, string bio, DateTime birthDate, string cpf, string address, string neighborhood, string cep, string state, string city, string? complement, string number, bool notifications)
+        public void UpdateProfile(string? avatar, string phone, string bio, DateTime birthDate, string cpf, string address, string neighborhood, string cep, string state, string city, string? complement, string number, bool notifications, ContactType contactType)
         {
             Avatar = avatar;
             Phone = phone;
@@ -42,6 +42,7 @@ namespace Domain.Entities
             Complement = complement;
             Number = number;
             Notifications = notifications;
+            ContactType = contactType;
             UpdatedAt = DateTime.UtcNow;
         }
         public string CPF { get; private set; }
@@ -55,7 +56,8 @@ namespace Domain.Entities
         public string Bio { get; private set; }
         public bool Notifications { get; private set; }
         public string Number { get; private set; }
-        public string? Complement { get; private set; } 
+        public string? Complement { get; private set; }
+        public ContactType ContactType { get; private set; }
         public ApprovalStatus ApprovalStatus { get; private set; }
         public UserRole Role { get; private set; } = UserRole.User;
         public DateTime CreatedAt { get; private set; }
@@ -66,12 +68,13 @@ namespace Domain.Entities
         private User() { }
 
         // Factory/constructor (customize as needed)
-        public User(string email, string name, string phone, bool notifications)
+        public User(string email, string name, string phone, bool notifications, string cpf)
         {
             Id = Guid.NewGuid();
             Email = email;
             Name = name;
             Phone = phone;
+            CPF = cpf;
             Notifications = notifications;
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
@@ -79,12 +82,13 @@ namespace Domain.Entities
             Providers = new List<Provider>();
         }
 
-        public void SetAdditionalInfo(string? avatar, string phone, string bio, string clerkId)
+        public void SetAdditionalInfo(string phone, string bio, string clerkId, ContactType contactType, DateTime birthDate)
         {
-            Avatar = avatar;
             Phone = phone;
             Bio = bio;
             ClerkId = clerkId;
+            ContactType = contactType;
+            BirthDate = birthDate;
         }
 
         public void SetAddressInformation(string address, string neighborhood, string cep, string state, string city, string complement,string number)
@@ -96,6 +100,11 @@ namespace Domain.Entities
             City = city;
             Complement = complement;
             Number = number;
+        }
+
+        public void SetAvatar(string avatar)
+        {
+            Avatar = avatar;
         }
 
         public void SetRole(UserRole role)
