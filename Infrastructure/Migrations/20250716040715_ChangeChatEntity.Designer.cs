@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20250716040715_ChangeChatEntity")]
+    partial class ChangeChatEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,9 +39,8 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("SentAt")
                         .HasColumnType("timestamp with time zone");
@@ -67,21 +69,19 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UserAClerkId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
+                    b.Property<Guid>("UserAId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("UserBClerkId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
+                    b.Property<Guid>("UserBId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PetId");
 
-                    b.HasIndex("UserBClerkId");
+                    b.HasIndex("UserBId");
 
-                    b.HasIndex("UserAClerkId", "UserBClerkId")
+                    b.HasIndex("UserAId", "UserBId")
                         .IsUnique();
 
                     b.ToTable("ChatRooms");
@@ -388,7 +388,6 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
-                        .HasPrincipalKey("ClerkId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -407,15 +406,13 @@ namespace Infrastructure.Migrations
 
                     b.HasOne("Domain.Entities.User", "UserA")
                         .WithMany()
-                        .HasForeignKey("UserAClerkId")
-                        .HasPrincipalKey("ClerkId")
+                        .HasForeignKey("UserAId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.User", "UserB")
                         .WithMany()
-                        .HasForeignKey("UserBClerkId")
-                        .HasPrincipalKey("ClerkId")
+                        .HasForeignKey("UserBId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

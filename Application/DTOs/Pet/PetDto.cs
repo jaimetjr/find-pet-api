@@ -31,5 +31,16 @@ namespace Application.DTOs.Pet
         public string ClerkId { get; set; } = default!;
         public UserDto User { get; set; } = default!;
         public List<PetImagesDto> PetImages { get; set; } = new List<PetImagesDto>();
+
+        public PetDto() { }
+
+        public PetDto(Domain.Entities.Pet entity)
+        {
+            Id = entity.Id;
+            Name = entity.Name;
+            PetImages = entity.PetImages
+                .Select(pi => new PetImagesDto { Id = pi.Id, ImageUrl = pi.ImageUrl})
+                .ToList();
+        }
     }
 }

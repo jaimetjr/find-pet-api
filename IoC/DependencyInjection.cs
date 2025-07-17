@@ -36,6 +36,9 @@ namespace IoC
             services.AddScoped<IPetService, PetService>();
             services.AddScoped<IPetRepository, PetRepository>();
 
+            services.AddScoped<IChatService, ChatService>();
+            services.AddScoped<IChatRepository, ChatRepository>();
+
             // Add FluentValidation
             services.AddValidatorsFromAssemblyContaining<CreatePetDtoValidator>();
             services.AddScoped<IValidationService, ValidationService>();

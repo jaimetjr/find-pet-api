@@ -23,8 +23,8 @@ namespace API.Controllers
 
         [HttpPost("images")]
         public async Task<IActionResult> Images([FromForm] CreatePetImagesDto request)
-            {
-                var result = await _petService.CreatePetImages(request);
+        {
+            var result = await _petService.CreatePetImages(request);
             return HandleResult(result);
         }
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using API.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -96,6 +97,7 @@ builder.Services.AddSwaggerGen(c =>
             }
         });
 });
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -110,6 +112,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
+
+app.MapHub<ChatHub>("/chathub");
 
 // Add request logging middleware
 app.UseMiddleware<RequestLoggingMiddleware>();

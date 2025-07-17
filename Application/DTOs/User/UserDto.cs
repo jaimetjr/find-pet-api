@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Domain.Entities;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,5 +32,14 @@ namespace Application.DTOs.User
         public ApprovalStatus ApprovalStatus { get; set; }
         public UserRole Role { get; set; }
         public ContactType ContactType { get; set; }
+
+        public UserDto() { }
+
+        public UserDto(Domain.Entities.User user)
+        {
+            ClerkId = user.ClerkId;
+            Name = user.Name;
+            Avatar = user.Avatar;
+        }
     }
 }
