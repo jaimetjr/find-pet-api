@@ -11,5 +11,7 @@ namespace Application.Interfaces.Services
         Task<User?> GetByIdAsync(Guid id);
         Task<User?> GetByClerkIdAsync(string clerkId);
         Task<Result<UserDto>> UpdateUserAsync(Guid id, UpdateUserDto dto);
+        Task<Result<UserDto>> UpdateExpoPushTokenAsync(string clerkId, string expoPushToken);
+        Task<Result<string?>> GetExpoPushTokenAsync(string userClerkId);
     }
 }

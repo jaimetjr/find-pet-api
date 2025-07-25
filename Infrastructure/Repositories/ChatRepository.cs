@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Application.Helpers;
+using Application.Interfaces.Repositories;
 using Domain.Entities.Chat;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,7 @@ namespace Infrastructure.Repositories
         public async Task<List<ChatMessage>> GetMessagesAsync(Guid chatRoomId, int page, int pageSize)
         {
             return await _context.ChatMessages
+                .Include(x => x.ChatRoom)
                 .Where(m => m.ChatRoomId == chatRoomId)
                 .OrderBy(m => m.SentAt)
                 .Skip((page - 1) * pageSize)
@@ -62,6 +64,58 @@ namespace Infrastructure.Repositories
                 .Include(x => x.Pet)
                 .Include(x => x.Pet.PetImages)
                 .ToListAsync();
+        }
+
+        public async Task<ChatRoom> GetChat(Guid chatId)
+        {
+            return await _context.ChatRooms
+                .Include(r => r.Messages)
+                .Include(x => x.UserA)
+                .Include(x => x.UserB)
+                .Include(x => x.Pet)
+                .Include(x => x.Pet.PetImages)
+                .FirstOrDefaultAsync(r => r.Id == chatId);
+        }
+
+        public async Task<ChatMessage?> MarkMessageAsDeliveredAsync(Guid messageId, string recipientClerkId)
+        {
+            var message = await _context.ChatMessages
+                .FirstOrDefaultAsync(m => m.Id == messageId && m.RecipientId == recipientClerkId);
+
+            if (message != null && !message.WasDelivered)
+            {
+                message.MarkAsDelivered(recipientClerkId);
+                await _context.SaveChangesAsync();
+            }
+            return message;
+        }
+
+        public async Task<List<ChatMessage>> MarkMessageAsSeenAsync(Guid chatRoomId, string viewerClerkId)
+        {
+            try
+            {
+                var messages = await _context.ChatMessages
+                    .Where(m => m.ChatRoomId == chatRoomId && m.SenderId != viewerClerkId && !m.WasSeen)
+                    .ToListAsync();
+
+                foreach (var message in messages)
+                {
+                    message.MarkAsSeen(viewerClerkId);
+                }
+                await _context.SaveChangesAsync();
+
+                return messages;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<ChatMessage>> GetUndeliveredMessagesAsync(Guid roomId, string recipientId)
+        {
+            return await _context.ChatMessages
+                           .Where(x => x.ChatRoomId == roomId && x.RecipientId == recipientId && !x.WasDelivered).ToListAsync();
         }
     }
 }

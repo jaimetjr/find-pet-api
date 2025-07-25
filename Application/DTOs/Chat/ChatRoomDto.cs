@@ -20,6 +20,7 @@ namespace Application.DTOs.Chat
         public PetDto Pet { get; set; }
         public List<ChatMessageDto> Messages { get; set; } = new List<ChatMessageDto>();
 
+        public ChatRoomDto() { }
         public ChatRoomDto(ChatRoom entity)
         {
             Id = entity.Id;

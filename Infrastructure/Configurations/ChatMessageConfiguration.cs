@@ -29,6 +29,23 @@ namespace Infrastructure.Configurations
                 .IsRequired()
                 .HasMaxLength(2000); // Adjust as needed
 
+            builder.Property(m => m.WasSeen)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            builder.Property(m => m.SeenByClerkId)
+                .HasMaxLength(100);
+
+            builder.Property(m => m.WasDelivered)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            builder.HasOne(m => m.Recipient)
+               .WithMany()
+               .HasForeignKey(m => m.RecipientId)
+               .HasPrincipalKey(x => x.ClerkId)
+               .OnDelete(DeleteBehavior.Restrict);
+
             builder.Property(m => m.SentAt)
                 .IsRequired();
         }

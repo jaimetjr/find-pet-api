@@ -57,6 +57,7 @@ namespace Domain.Entities
         public bool Notifications { get; private set; }
         public string Number { get; private set; }
         public string? Complement { get; private set; }
+        public string? ExpoPushToken { get; private set; }
         public ContactType ContactType { get; private set; }
         public ApprovalStatus ApprovalStatus { get; private set; }
         public UserRole Role { get; private set; } = UserRole.User;
@@ -110,6 +111,11 @@ namespace Domain.Entities
         public void SetRole(UserRole role)
         {
             Role = role;
+        }
+
+        public void SetPushToken(string expoPushToken)
+        {
+            ExpoPushToken = expoPushToken;
         }
     }
 }

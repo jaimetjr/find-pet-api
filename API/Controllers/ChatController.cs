@@ -1,4 +1,5 @@
-﻿using Application.Helpers;
+﻿using Application.DTOs.Chat;
+using Application.Helpers;
 using Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -25,6 +26,17 @@ namespace API.Controllers
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
             var result = await _chatService.GetChats(userId);
+            return HandleResult(result);
+        }
+
+        [Authorize]
+        [HttpPost("MarkMessageAsSeen")]
+        public async Task<IActionResult> MarkMessageAsSeen([FromBody] ChatRoomIdDto room)
+        {
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+            var result = await _chatService.MarkMessageAsSeenAsync(room.RoomId, userId);
             return HandleResult(result);
         }
     }

@@ -38,6 +38,7 @@ namespace IoC
 
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IChatRepository, ChatRepository>();
+            services.AddScoped<IPushService, PushService>();
 
             // Add FluentValidation
             services.AddValidatorsFromAssemblyContaining<CreatePetDtoValidator>();

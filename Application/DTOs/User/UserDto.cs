@@ -32,6 +32,7 @@ namespace Application.DTOs.User
         public ApprovalStatus ApprovalStatus { get; set; }
         public UserRole Role { get; set; }
         public ContactType ContactType { get; set; }
+        public string ExpoPushToken { get; set; } = default!;
 
         public UserDto() { }
 

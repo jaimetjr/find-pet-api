@@ -113,7 +113,7 @@ namespace Application.Services
 
                 user.UpdateProfile(avatar, dto.Phone, dto.Bio, dto.BirthDate, dto.CPF,
                                    dto.Address, dto.Neighborhood, dto.CEP, dto.State, dto.City, dto.Complement, dto.Number, dto.Notifications, dto.ContactType);
-                
+
                 await _userRepository.Update(user);
 
                 var userDto = _mapper.Map<UserDto>(user);
@@ -122,6 +122,39 @@ namespace Application.Services
             catch (Exception ex)
             {
                 return Result<UserDto>.Fail(ex.Message);
+            }
+        }
+
+        public async Task<Result<UserDto>> UpdateExpoPushTokenAsync(string clerkId, string expoPushToken)
+        {
+            try
+            {
+                var user = await _userRepository.GetByClerkIdAsync(clerkId);
+                if (user == null)
+                    return Result<UserDto>.Fail("Usuário não encontrado");
+                user.SetPushToken(expoPushToken);
+                await _userRepository.Update(user);
+                var userDto = _mapper.Map<UserDto>(user);
+                return Result<UserDto>.Ok(userDto);
+            }
+            catch (Exception ex)
+            {
+                return Result<UserDto>.Fail(ex.Message);
+            }
+        }
+
+        public async Task<Result<string?>> GetExpoPushTokenAsync(string userClerkId)
+        {
+            try
+            {
+                var user = await _userRepository.GetByClerkIdAsync(userClerkId);
+                if (user == null)
+                    return Result<string?>.Fail("Usuário não encontrado");
+                return Result<string?>.Ok(user.ExpoPushToken);
+            }
+            catch (Exception ex)
+            {
+                return Result<string?>.Fail(ex.Message);
             }
         }
     }

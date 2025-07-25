@@ -48,5 +48,16 @@ namespace API.Controllers
             var result = await _userService.UpdateUserAsync(id, dto);
             return HandleResult(result, user => Ok(user));
         }
+
+        [Authorize]
+        [HttpPatch("update-expo-push-token")]
+        public async Task<IActionResult> UpdateExpoPushToken([FromBody] UpdateExpoPushTokenDto dto)
+        {
+            var user = await _userService.GetByClerkIdAsync(dto.ClerkId);
+            if (user == null)
+                return NotFoundResult();
+            var result = await _userService.UpdateExpoPushTokenAsync(dto.ClerkId, dto.ExpoPushToken);
+            return HandleResult(result, user => Ok(user));
+        }
     }
 }

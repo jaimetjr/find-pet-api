@@ -15,5 +15,9 @@ namespace Application.Interfaces.Repositories
         Task<List<ChatMessage>> GetMessagesAsync(Guid chatRoomId, int page, int pageSize);
         Task SaveChangesAsync();
         Task<List<ChatRoom>> GetChats(string clerkId);
+        Task<ChatRoom> GetChat(Guid chatId);
+        Task<List<ChatMessage>> MarkMessageAsSeenAsync(Guid chatRoomId, string viewerClerkId);
+        Task<ChatMessage?> MarkMessageAsDeliveredAsync(Guid messageId, string recipientClerkId);
+        Task<List<ChatMessage>> GetUndeliveredMessagesAsync(Guid roomId, string recipientId);
     }
 }
