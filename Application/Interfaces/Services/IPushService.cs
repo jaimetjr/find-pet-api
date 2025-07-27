@@ -8,6 +8,6 @@ namespace Application.Interfaces.Services
 {
     public interface IPushService
     {
-        Task SendNotificationAsync(string expoPushToken, string title, string body, string data = "");
+        Task SendNotificationAsync(string expoPushToken, string title, string body, object? data = null);
     }
 }

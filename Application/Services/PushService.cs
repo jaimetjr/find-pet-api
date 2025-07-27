@@ -16,7 +16,7 @@ namespace Application.Services
             _client = client;
         }
 
-        public async Task SendNotificationAsync(string expoPushToken, string title, string body, string data = "")
+        public async Task SendNotificationAsync(string expoPushToken, string title, string body, object? data = null)
         {
             var payload = new
             {

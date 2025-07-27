@@ -46,8 +46,20 @@ namespace API.Hubs
                 var expoPushToken = await _userService.GetExpoPushTokenAsync(recipientId);
                 if (!string.IsNullOrEmpty(expoPushToken.Value))
                 {
-                    await _pushService.SendNotificationAsync(expoPushToken.Value, "Nova mensagem", 
-                                                             content.Substring(0, 10));
+                    try
+                    {
+                        await _pushService.SendNotificationAsync(expoPushToken.Value, "Nova mensagem", 
+                                                                 content, new {
+                                senderId = senderId,
+                                senderName = chatMessage.SenderName,
+                                petId = chatRoom.Value?.PetId,
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw;
+                    }
                 }
             }
         }
