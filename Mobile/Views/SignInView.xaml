@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Mobile.Views.SignInView"
+             xmlns:controls="clr-namespace:Mobile.Controls">
+    <VerticalStackLayout Spacing="{StaticResource SpacingMD}" Padding="0">
+
+        <!-- Email input -->
+        <controls:CustomInput
+            Label="Email"
+            Icon="mail.png"
+            Placeholder="Enter your email"
+            Text="{Binding Email, Mode=TwoWay}"
+            Error="{Binding EmailError}"
+            IsPassword="False"
+            BorderColor="{Binding EmailBorderColor}" />
+
+        <!-- Password input -->
+        <controls:CustomInput
+            Label="Password"
+            Icon="lock.png"
+            Placeholder="Enter your password"
+            Text="{Binding Password, Mode=TwoWay}"
+            Error="{Binding PasswordError}"
+            IsPassword="{Binding IsPassword, Mode=TwoWay}"
+            BorderColor="{Binding PasswordBorderColor}" />
+
+        <!-- Toggle password visibility -->
+        <Button
+            Text="{Binding PasswordToggleText}"
+            Clicked="OnTogglePasswordVisibility"
+            BackgroundColor="Transparent"
+            TextColor="{StaticResource PrimaryColor}"
+            FontSize="13"
+            Padding="0"/>
+
+        <!-- Error message -->
+        <Label
+            Text="{Binding MainError}"
+            TextColor="Crimson"
+            FontSize="13"
+            IsVisible="{Binding HasMainError}"
+            HorizontalOptions="Start"
+            Margin="4,2,0,0"/>
+
+        <!-- Sign In button with loading indicator -->
+        <Grid HeightRequest="48">
+            <ActivityIndicator
+                IsRunning="{Binding IsSubmitting}"
+                IsVisible="{Binding IsSubmitting}"
+                Color="{StaticResource PrimaryColor}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                WidthRequest="28" HeightRequest="28"/>
+            <Button
+                Text="Sign In"
+                Clicked="OnSignInClicked"
+                IsEnabled="{Binding CanSubmit}"
+                BackgroundColor="{StaticResource PrimaryColor}"
+                TextColor="{StaticResource CardColor}"
+                FontSize="17"
+                CornerRadius="8"
+                Padding="10,8"
+                HeightRequest="48"
+                IsVisible="{Binding IsNotSubmitting}" />
+        </Grid>
+
+    </VerticalStackLayout>
+</ContentView>

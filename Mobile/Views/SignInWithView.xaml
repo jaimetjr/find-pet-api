@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Mobile.Views.SignInWithView"
+             >
+    <HorizontalStackLayout Spacing="{StaticResource SpacingMD}" Padding="0" HorizontalOptions="Center">
+        <!-- Google -->
+        <Button
+            Clicked="OnGoogleClicked"
+            BackgroundColor="{StaticResource CardColor}"
+            HeightRequest="48" WidthRequest="48"
+            CornerRadius="16"
+            Padding="0">
+            <Button.ImageSource>
+                <FileImageSource File="logonovogoogle.png" />
+            </Button.ImageSource>
+        </Button>
+        <!-- Apple -->
+        <Button
+            Clicked="OnAppleClicked"
+            BackgroundColor="{StaticResource CardColor}"
+            HeightRequest="48" WidthRequest="48"
+            CornerRadius="16"
+            Padding="0">
+            <Button.ImageSource>
+                <FileImageSource File="logonovoapple.png" />
+            </Button.ImageSource>
+        </Button>
+        <!-- Facebook -->
+        <Button
+            Clicked="OnFacebookClicked"
+            BackgroundColor="{StaticResource CardColor}"
+            HeightRequest="48" WidthRequest="48"
+            CornerRadius="16"
+            Padding="0">
+            <Button.ImageSource>
+                <FileImageSource File="logonovoface.png" />
+            </Button.ImageSource>
+        </Button>
+    </HorizontalStackLayout>
+</ContentView>

@@ -34,19 +34,19 @@ namespace Infrastructure.Storage
             }
         }
 
-        public async Task<string> UploadAsync(IFormFile file, string folder)
+        public async Task<string> UploadAsync(string file, string folder)
         {
-            var fileName = $"{folder}/{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var blobClient = _containerClient.GetBlobClient(fileName);
-            using var stream = file.OpenReadStream();
-            await blobClient.UploadAsync(stream, overwrite: true);
+            //var fileName = $"{folder}/{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var blobClient = _containerClient.GetBlobClient(file);
+            //using var stream = file.OpenReadStream();
+            //await blobClient.UploadAsync(stream, overwrite: true);
 
             return blobClient.Uri.ToString();
         }
 
-        public async Task<bool> DeleteAsync(IFormFile file, string folder)
+        public async Task<bool> DeleteAsync(string file, string folder)
         {
-            var fileName = $"{folder}/{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var fileName = $"{folder}/{Guid.NewGuid()}{Path.GetExtension(file)}";
 
             var blobClient = _containerClient.GetBlobClient(fileName);
             return await blobClient.DeleteIfExistsAsync();

@@ -1,5 +1,4 @@
 ﻿using Domain.Enums;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +10,7 @@ namespace Application.DTOs.User
 {
     public class UpdateUserDto
     {       
-        public IFormFile? Avatar { get; set; } = default!;
+        public string? Avatar { get; set; } = default!;
         public string? Phone { get; set; } = default!;
         public string? Bio { get; set; } = default!;
         public DateTime BirthDate { get; set; } = default!;

@@ -9,7 +9,7 @@ namespace Application.Interfaces.Services
 {
     public interface IFileStorageService
     {
-        Task<string> UploadAsync(IFormFile file, string folder);
-        Task<bool> DeleteAsync(IFormFile file, string folder);
+        Task<string> UploadAsync(string file, string folder);
+        Task<bool> DeleteAsync(string file, string folder);
     }
 }

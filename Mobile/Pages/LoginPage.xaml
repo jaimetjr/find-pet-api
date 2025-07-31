@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Mobile.Pages.LoginPage"
+             Title="LoginPage"
+             xmlns:views="clr-namespace:Mobile.Views"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="Transparent">
+    <ScrollView>
+        <VerticalStackLayout Padding="24,0,24,0"
+                             Spacing="24"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center">
+
+            <!-- Logo -->
+            <Image Source="SimbaNala.png"
+                   WidthRequest="130"
+                   HeightRequest="130"
+                   Margin="0,36,0,0"
+                   HorizontalOptions="Center" />
+
+            <!-- Welcome Text -->
+            <Label Text="Bem-vindo ao Achando Lar"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="#7D4E24"
+                   HorizontalOptions="Center"
+                   Margin="0,16,0,0"/>
+            <Label Text="Conectando pets especiais a lares amorosos"
+                   FontSize="16"
+                   TextColor="#A67C52"
+                   HorizontalOptions="Center"
+                   Margin="0,2,0,18"/>
+
+            <!-- Inputs -->
+            <views:SignInView />
+
+            <!-- OR separator -->
+            <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Margin="0,20">
+                <BoxView HeightRequest="1" WidthRequest="60" Color="#E8D0B3" VerticalOptions="Center"/>
+                <Label Text="ou" FontSize="14" TextColor="#A67C52" Margin="8,0"/>
+                <BoxView HeightRequest="1" WidthRequest="60" Color="#E8D0B3" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+
+            <!-- Social login buttons -->
+            <HorizontalStackLayout Spacing="24" Margin="0,0,0,0" HorizontalOptions="Center">
+                <Frame Padding="0" CornerRadius="12" BackgroundColor="White" BorderColor="#E8D0B3" HeightRequest="48" WidthRequest="48" HasShadow="False">
+                    <Image Source="LogoNovoGoogle.png" WidthRequest="30" HeightRequest="30" VerticalOptions="Center" HorizontalOptions="Center">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoogleSignInCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </Frame>
+                <Frame Padding="0" CornerRadius="12" BackgroundColor="White" BorderColor="#E8D0B3" HeightRequest="48" WidthRequest="48" HasShadow="False">
+                    <Image Source="LogoNovoApple.png" WidthRequest="30" HeightRequest="30" VerticalOptions="Center" HorizontalOptions="Center">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AppleSignInCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </Frame>
+                <Frame Padding="0" CornerRadius="12" BackgroundColor="White" BorderColor="#E8D0B3" HeightRequest="48" WidthRequest="48" HasShadow="False">
+                    <Image Source="LogoNovoFace.png" WidthRequest="30" HeightRequest="30" VerticalOptions="Center" HorizontalOptions="Center">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding FacebookSignInCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </Frame>
+            </HorizontalStackLayout>
+
+            <!-- Sign up footer link -->
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="2" Margin="0,18,0,0">
+                <Label Text="Não tem uma conta?" FontSize="13" TextColor="#A67C52" />
+                <Label Text="Cadastre-se"
+                       FontSize="13"
+                       TextColor="#F9B872"
+                       FontAttributes="Bold">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SignUpCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

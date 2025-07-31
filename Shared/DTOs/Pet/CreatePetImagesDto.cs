@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +10,6 @@ namespace Application.DTOs.Pet
     {
         public string UserId { get; set; } = default!;
         public Guid PetId { get; set; } = default!;
-        public List<IFormFile> Images { get; set; } = new List<IFormFile>();
+        public List<string> Images { get; set; } = new List<string>();
     }
 }

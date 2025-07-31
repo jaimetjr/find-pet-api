@@ -130,6 +130,7 @@ namespace API.Hubs
             }
         }
 
+        #region User Connection 
         public override Task OnConnectedAsync()
         {
             var clerkId = GetCurrentUserId();
@@ -157,5 +158,22 @@ namespace API.Hubs
                 return null;
             return Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
+        #endregion
+
+        #region Typing session
+
+        public async Task SendTyping(Guid chatRoomId, string senderId)
+        {
+            await Clients.GroupExcept(chatRoomId.ToString(), Context.ConnectionId)
+                         .SendAsync("UserTyping", chatRoomId, senderId);
+        }
+
+        public async Task StopTyping(Guid chatRoomId, string senderId)
+        {
+            await Clients.GroupExcept(chatRoomId.ToString(), Context.ConnectionId)
+                         .SendAsync("UserStoppedTyping", chatRoomId, senderId);
+        }
+
+        #endregion
     }
 }
