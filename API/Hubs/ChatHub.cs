@@ -14,7 +14,8 @@ namespace API.Hubs
         private readonly IChatService _chatService;
         private readonly IPushService _pushService;
         private readonly IUserService _userService;
-        private readonly ConcurrentDictionary<string, string> OnlineUsers = new();
+        private static readonly ConcurrentDictionary<string, string> OnlineUsers = new();
+        private static readonly ConcurrentDictionary<string, DateTime> LastSeen = new();
 
         public ChatHub(IChatService chatService, IPushService pushService, IUserService userService)
         {
@@ -62,6 +63,15 @@ namespace API.Hubs
                     }
                 }
             }
+        }
+
+        public async Task OnlineStatus(Guid chatRoomId, string recipientId)
+        {
+            var userOnline = IsUserOnline(recipientId);
+            var lastSeen = GetLastSeen(recipientId);
+            await Clients.Group(chatRoomId.ToString())
+                .SendAsync("UserOffline", userOnline, lastSeen);
+            
         }
 
         public async Task JoinRoomGroup(Guid chatRoomId)
@@ -134,7 +144,10 @@ namespace API.Hubs
         {
             var clerkId = GetCurrentUserId();
             if (!string.IsNullOrEmpty(clerkId))
+            {
                 OnlineUsers[clerkId] = Context.ConnectionId;
+                LastSeen.TryRemove(clerkId, out _);
+            }
             return base.OnConnectedAsync();
         }
 
@@ -142,7 +155,10 @@ namespace API.Hubs
         {
             var clerkId = GetCurrentUserId();
             if (!string.IsNullOrEmpty(clerkId))
+            {
                 OnlineUsers.TryRemove(clerkId, out _);
+                LastSeen[clerkId] = DateTime.UtcNow;
+            }
             return base.OnDisconnectedAsync(exception);
         }
 
@@ -156,6 +172,13 @@ namespace API.Hubs
             if (Context.User == null)
                 return null;
             return Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        private DateTime? GetLastSeen(string clerkId)
+        {
+            if (LastSeen.TryGetValue(clerkId, out var lastSeen))
+                return lastSeen;
+            return null;
         }
     }
 }
