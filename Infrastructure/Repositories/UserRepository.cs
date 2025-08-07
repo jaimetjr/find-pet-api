@@ -30,5 +30,9 @@ namespace Infrastructure.Repositories
                    u.Providers.Any(p => p.ProviderKey == providerKey && p.Type == providerType));
         }
         
+        public async Task<List<User>> GetExpoTokenWithoutMe(string clerkId)
+        {
+            return await _context.Users.Where(x => x.ClerkId != clerkId && x.Notifications && !string.IsNullOrEmpty(x.ExpoPushToken)).ToListAsync();
+        }
     }
 }

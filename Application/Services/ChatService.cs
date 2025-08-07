@@ -28,7 +28,8 @@ namespace Application.Services
             var userPair = new List<string> { userAClerkId, userBClerkId };
             userPair.Sort(StringComparer.Ordinal);
             var first = userPair[0];
-            var second = userPair[1]; var room = await _chatRepository.GetPrivateRoomAsync(first, second);
+            var second = userPair[1]; 
+            var room = await _chatRepository.GetPrivateRoomAsync(first, second, petId);
             if (room == null)
             {
                 room = await _chatRepository.CreatePrivateRoomAsync(first, second, petId);

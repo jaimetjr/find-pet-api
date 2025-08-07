@@ -20,11 +20,12 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<ChatRoom?> GetPrivateRoomAsync(string userAClerkId, string userBClerkId)
+        public async Task<ChatRoom?> GetPrivateRoomAsync(string userAClerkId, string userBClerkId, Guid petId)
         {
             return await _context.ChatRooms
                 .Include(r => r.Messages)
-                .FirstOrDefaultAsync(r => r.UserAClerkId == userAClerkId && r.UserBClerkId == userBClerkId);
+                .FirstOrDefaultAsync(r => r.UserAClerkId == userAClerkId && r.UserBClerkId == userBClerkId
+                                       && r.PetId == petId);
         }
 
         public async Task<ChatRoom> CreatePrivateRoomAsync(string userAClerkId, string userBClerkId, Guid petId)

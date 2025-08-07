@@ -12,5 +12,6 @@ namespace Application.Interfaces.Repositories
         Task<User?> GetByEmailAsync(string email);
         Task<User?> GetByClerkIdAsync(string clerkId);
         Task<User?> GetByProviderAsync(string providerKey, ProviderType providerType);
+        Task<List<User>> GetExpoTokenWithoutMe(string clerkId);
     }
 }

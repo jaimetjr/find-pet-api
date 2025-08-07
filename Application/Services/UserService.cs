@@ -157,5 +157,21 @@ namespace Application.Services
                 return Result<string?>.Fail(ex.Message);
             }
         }
+
+        public async Task<Result<List<UserDto>>> GetExpoTokenWithoutMe(string clerkId)
+        {
+            try
+            {
+                var users = await _userRepository.GetExpoTokenWithoutMe(clerkId);
+                if (users == null || users.Count == 0)
+                    return Result<List<UserDto>>.Fail("Nenhum usuário encontrado");
+                var usersDto = _mapper.Map<List<UserDto>>(users);
+                return Result<List<UserDto>>.Ok(usersDto);
+            }
+            catch (Exception ex)
+            {
+                return Result<List<UserDto>>.Fail(ex.Message);
+            }
+        }
     }
 }

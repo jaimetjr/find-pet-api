@@ -49,10 +49,22 @@ namespace API.Hubs
                 {
                     try
                     {
+                        string avatar = "";
+                        if (chatRoom.Value != null)
+                        {
+                            if (chatRoom.Value.UserA != null && chatRoom.Value.UserA.ClerkId == recipientId && !string.IsNullOrEmpty(chatRoom.Value.UserA.Avatar))
+                                avatar = chatRoom.Value.UserA.Avatar;
+                            else if (chatRoom.Value.UserB != null && chatRoom.Value.UserB.ClerkId == recipientId && !string.IsNullOrEmpty(chatRoom.Value.UserB.Avatar))
+                                avatar = chatRoom.Value.UserB.Avatar;
+
+                        }
+
                         await _pushService.SendNotificationAsync(expoPushToken.Value, "Nova mensagem", 
                                                                  content, new {
-                                senderId = senderId,
-                                senderName = chatMessage.SenderName,
+                                screen = "chat",
+                                userId = senderId,
+                                userName = chatMessage.SenderName,
+                                userAvatar = avatar,
                                 petId = chatRoom.Value?.PetId,
                         });
                     }
@@ -61,6 +73,31 @@ namespace API.Hubs
 
                         throw;
                     }
+                }
+            }
+        }
+
+        public async Task SendPetNotification(string clerkId, Guid petId)
+        {
+            var tokens = await _userService.GetExpoTokenWithoutMe(clerkId);
+            if (tokens.Value == null || !tokens.Value.Any())
+                return;
+            foreach (var user in tokens.Value)
+            {
+                try
+                {
+                    await _pushService.SendNotificationAsync(user.ExpoPushToken, 
+                                                            "Novo Pet chegando!!!", 
+                                                            "Novidade boa, há um novo pet que está esperando um lar!", 
+                                                            new 
+                                                            { 
+                                                                screen = "pet-detail",
+                                                                petId 
+                                                            });
+                }
+                catch (Exception ex)
+                {
+                    throw;
                 }
             }
         }

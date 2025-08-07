@@ -9,7 +9,7 @@ namespace Application.Interfaces.Repositories
 {
     public interface IChatRepository
     {
-        Task<ChatRoom?> GetPrivateRoomAsync(string userAClerkId, string userBClerkId);
+        Task<ChatRoom?> GetPrivateRoomAsync(string userAClerkId, string userBClerkId, Guid petId);
         Task<ChatRoom> CreatePrivateRoomAsync(string userAClerkId, string userBClerkId, Guid petId);
         Task AddMessageAsync(ChatMessage message);
         Task<List<ChatMessage>> GetMessagesAsync(Guid chatRoomId, int page, int pageSize);

@@ -13,5 +13,6 @@ namespace Application.Interfaces.Services
         Task<Result<UserDto>> UpdateUserAsync(Guid id, UpdateUserDto dto);
         Task<Result<UserDto>> UpdateExpoPushTokenAsync(string clerkId, string expoPushToken);
         Task<Result<string?>> GetExpoPushTokenAsync(string userClerkId);
+        Task<Result<List<UserDto>>> GetExpoTokenWithoutMe(string clerkId);
     }
 }
