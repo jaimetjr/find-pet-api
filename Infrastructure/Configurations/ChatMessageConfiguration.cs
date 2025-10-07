@@ -48,6 +48,9 @@ namespace Infrastructure.Configurations
 
             builder.Property(m => m.SentAt)
                 .IsRequired();
+
+            // Index for the optimize queries
+            builder.HasIndex(m => new { m.ChatRoomId, m.SentAt, m.Id });
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Chat;
+﻿using Domain.Entities;
+using Domain.Entities.Chat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,12 +40,21 @@ namespace Application.DTOs.Chat
             SenderId = entity.SenderId;
             RecipientId = entity.RecipientId;
 
-            if (entity.ChatRoom != null)    
+            if (entity.ChatRoom != null)
+            {
                 ChatRoom = new ChatRoomDto
                 {
                     UserAClerkId = entity.ChatRoom.UserAClerkId,
                     UserBClerkId = entity.ChatRoom.UserBClerkId,
                 };
+
+                if (entity.ChatRoom.UserA != null && entity.ChatRoom.UserA.ClerkId == entity.SenderId)
+                    SenderName = entity.ChatRoom.UserA.Name;
+                else if (entity.ChatRoom.UserB != null && entity.ChatRoom.UserB.ClerkId == entity.SenderId)
+                    SenderName = entity.ChatRoom.UserB.Name;
+                else
+                    SenderName = "Unknown User";
+            }
         }
     }
 }

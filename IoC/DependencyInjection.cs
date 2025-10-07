@@ -39,6 +39,9 @@ namespace IoC
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IChatRepository, ChatRepository>();
 
+            services.AddScoped<IChatMessageReadRepository, ChatMessageReadRepository>();
+            services.AddScoped<IChatMessageReadService, ChatMessageReadService>();
+
             services.AddHttpClient<IPushService, PushService>();
             services.AddScoped<IPushService, PushService>();
 

@@ -14,14 +14,16 @@ namespace API.Hubs
         private readonly IChatService _chatService;
         private readonly IPushService _pushService;
         private readonly IUserService _userService;
+        private readonly IChatMessageReadService _chatMessageReadService;   
         private static readonly ConcurrentDictionary<string, string> OnlineUsers = new();
         private static readonly ConcurrentDictionary<string, DateTime> LastSeen = new();
 
-        public ChatHub(IChatService chatService, IPushService pushService, IUserService userService)
+        public ChatHub(IChatService chatService, IPushService pushService, IUserService userService, IChatMessageReadService chatMessageReadService)
         {
             _chatService = chatService;
             _pushService = pushService;
             _userService = userService;
+            _chatMessageReadService = chatMessageReadService;
         }
 
         public async Task<ChatRoomDto> JoinPrivateChat(string userAId, string userBId, Guid petId)
@@ -42,14 +44,15 @@ namespace API.Hubs
                 .SendAsync("ReceiveMessage", chatMessage);
             await Clients.Group(chatRoomId.ToString()).SendAsync("NewMessage", chatRoom.Value);
 
-            if (!IsUserOnline(recipientId))
-            {
+            //if (!IsUserOnline(recipientId))
+            //{
                 var expoPushToken = await _userService.GetExpoPushTokenAsync(recipientId);
                 if (!string.IsNullOrEmpty(expoPushToken.Value))
                 {
                     try
                     {
                         string avatar = "";
+                        string name = "";
                         if (chatRoom.Value != null)
                         {
                             if (chatRoom.Value.UserA != null && chatRoom.Value.UserA.ClerkId == recipientId && !string.IsNullOrEmpty(chatRoom.Value.UserA.Avatar))
@@ -57,13 +60,17 @@ namespace API.Hubs
                             else if (chatRoom.Value.UserB != null && chatRoom.Value.UserB.ClerkId == recipientId && !string.IsNullOrEmpty(chatRoom.Value.UserB.Avatar))
                                 avatar = chatRoom.Value.UserB.Avatar;
 
+                        if (chatRoom.Value.UserA != null && chatRoom.Value.UserA.ClerkId == senderId)
+                            name = chatRoom.Value.UserA.Name;
+                        else if (chatRoom.Value.UserB != null && chatRoom.Value.UserB.ClerkId == senderId)
+                            name = chatRoom.Value.UserB.Name;
                         }
 
-                        await _pushService.SendNotificationAsync(expoPushToken.Value, "Nova mensagem", 
+                        await _pushService.SendNotificationAsync(expoPushToken.Value, "Mensagem de " + name, 
                                                                  content, new {
                                 screen = "chat",
                                 userId = senderId,
-                                userName = chatMessage.SenderName,
+                                userName = name,
                                 userAvatar = avatar,
                                 petId = chatRoom.Value?.PetId,
                         });
@@ -74,7 +81,7 @@ namespace API.Hubs
                         throw;
                     }
                 }
-            }
+            //}
         }
 
         public async Task SendPetNotification(string clerkId, Guid petId)
@@ -217,5 +224,9 @@ namespace API.Hubs
                 return lastSeen;
             return null;
         }
+
+        public Task<MessagePageDto> GetLatestMessages(Guid chatRoomId, int limit = 50) => _chatMessageReadService.GetLatestAsync(chatRoomId, limit);
+
+        public Task<MessagePageDto> GetMessagesBefore(Guid chatRoomId, string? before, int limit = 50) => _chatMessageReadService.GetBeforeAsync(chatRoomId, before, limit);
     }
 }
