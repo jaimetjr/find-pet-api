@@ -20,6 +20,7 @@ namespace Infrastructure.Data
         public DbSet<PetType> PetTypes => Set<PetType>();
         public DbSet<ChatRoom> ChatRooms => Set<ChatRoom>();
         public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
+        public DbSet<PetFavorite> PetFavorites => Set<PetFavorite>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

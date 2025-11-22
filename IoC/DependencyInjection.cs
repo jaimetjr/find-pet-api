@@ -35,6 +35,7 @@ namespace IoC
             services.AddScoped<IFileStorageService, AzureBlobStorageService>();
             services.AddScoped<IPetService, PetService>();
             services.AddScoped<IPetRepository, PetRepository>();
+            services.AddScoped<IPetFavoriteRepository, PetFavoriteRepository>();
 
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IChatRepository, ChatRepository>();

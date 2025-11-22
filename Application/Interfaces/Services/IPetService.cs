@@ -13,5 +13,6 @@ namespace Application.Interfaces.Services
         Task<Result<PetDto>> UpdatePetAsync(Guid id, UpdatePetDto model);
         Task<Result<bool>> DeleteImageFromPetAsync(Guid petId, Guid imageId);
         Task<Result<bool>> CreatePetImages(CreatePetImagesDto request);
+        Task<Result<bool>> SetIsFavoritePet(Guid petId, string userId);
     }
 }

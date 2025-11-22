@@ -26,7 +26,7 @@ namespace Application.Mapping
             CreateMap<PetBreedDto, PetBreed>().ReverseMap();
             CreateMap<PetTypeDto, PetType>().ReverseMap();
             CreateMap<PetImagesDto, PetImages>().ReverseMap();
-
+            CreateMap<PetFavoritesDto, PetFavorite>().ReverseMap();
         }
     }
 }

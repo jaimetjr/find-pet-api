@@ -24,6 +24,7 @@ namespace Domain.Entities
         public string? Complement { get; private set; }
         public User User { get; private set; }
         public ICollection<PetImages> PetImages { get; set; }
+        public ICollection<PetFavorite> PetFavorites { get; set; }
 
         public Pet() { }
 

@@ -20,10 +20,12 @@ namespace Application.Services
         private readonly IFileStorageService _fileStorageService;
         private readonly IValidationService _validationService;
         private readonly ILoggingService _loggingService;
+        private readonly IPetFavoriteRepository _petFavoriteRepository;
 
-        public PetService(IPetRepository petRepository, IMapper mapper, IFileStorageService fileStorageService, IRepository<PetImages> petImagesRepository, IValidationService validationService, ILoggingService loggingService)
+        public PetService(IPetRepository petRepository, IMapper mapper, IFileStorageService fileStorageService, IRepository<PetImages> petImagesRepository, IValidationService validationService, ILoggingService loggingService, IPetFavoriteRepository petFavoriteRepository)
         {
             _petRepository = petRepository;
+            _petFavoriteRepository = petFavoriteRepository;
             _mapper = mapper;
             _fileStorageService = fileStorageService;
             _petImagesRepository = petImagesRepository;
@@ -186,6 +188,25 @@ namespace Application.Services
             await _petImagesRepository.Remove(image);
 
             // delete from storage
+            return Result<bool>.Ok(true);
+        }
+
+        public async Task<Result<bool>> SetIsFavoritePet(Guid petId, string userId)
+        {
+            var existingFavorite = await _petFavoriteRepository.GetByPetIdAndUserId(petId, userId);
+
+            if (existingFavorite != null)
+            {
+                existingFavorite.ToggleFavorite();
+                await _petFavoriteRepository.Update(existingFavorite);
+            }
+            else
+            {
+                var newFavorite = new PetFavorite();
+                newFavorite.SetPetFavorite(userId, petId, true);
+                await _petFavoriteRepository.AddAsync(newFavorite);
+            }
+
             return Result<bool>.Ok(true);
         }
     }

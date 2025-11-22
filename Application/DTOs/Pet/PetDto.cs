@@ -31,6 +31,7 @@ namespace Application.DTOs.Pet
         public string ClerkId { get; set; } = default!;
         public UserDto User { get; set; } = default!;
         public List<PetImagesDto> PetImages { get; set; } = new List<PetImagesDto>();
+        public List<PetFavoritesDto> PetFavorites { get; set; } = new List<PetFavoritesDto>();
 
         public PetDto() { }
 

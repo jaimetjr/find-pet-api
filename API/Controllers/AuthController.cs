@@ -57,6 +57,7 @@ namespace API.Controllers
             if (user == null)
                 return NotFoundResult();
             var result = await _userService.UpdateExpoPushTokenAsync(dto.ClerkId, dto.ExpoPushToken);
+            
             return HandleResult(result, user => Ok(user));
         }
     }

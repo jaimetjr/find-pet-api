@@ -75,7 +75,18 @@ namespace API.Controllers
         [HttpDelete("{petId}/images/{imageId}")]
         public async Task<IActionResult> DeleteImageFromPet(Guid petId, Guid imageId)
         {
-                var result = await _petService.DeleteImageFromPetAsync(petId, imageId);
+            var result = await _petService.DeleteImageFromPetAsync(petId, imageId);
+            return HandleResult(result);
+        }
+
+        [Authorize]
+        [HttpPost("{petId}/favorite")]
+        public async Task<IActionResult> SetFavoritePet(Guid petId)
+        {
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+            var result = await _petService.SetIsFavoritePet(petId, userId);
             return HandleResult(result);
         }
     }
