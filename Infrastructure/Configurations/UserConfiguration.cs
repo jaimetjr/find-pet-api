@@ -48,6 +48,25 @@ namespace Infrastructure.Configurations
                    .HasForeignKey(x => x.ClerkId)
                    .HasPrincipalKey(x => x.ClerkId)
                      .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(x => x.OwnerAdoptionRequests)
+                   .WithOne(x => x.Owner)
+                   .HasForeignKey(x => x.OwnerClerkId)
+                   .HasPrincipalKey(x => x.ClerkId)
+                     .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(x => x.AdopterAdoptionRequests)
+                   .WithOne(x => x.Adopter)
+                   .HasForeignKey(x => x.AdopterClerkId)
+                   .HasPrincipalKey(x => x.ClerkId)
+                     .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(x => x.Notification)
+                   .WithOne(x => x.User)
+                   .HasForeignKey(x => x.UserClerkId)
+                   .HasPrincipalKey(x => x.ClerkId)
+                     .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

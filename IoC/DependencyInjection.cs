@@ -36,6 +36,10 @@ namespace IoC
             services.AddScoped<IPetService, PetService>();
             services.AddScoped<IPetRepository, PetRepository>();
             services.AddScoped<IPetFavoriteRepository, PetFavoriteRepository>();
+            services.AddScoped<IAdoptionRequestRepository, AdoptionRequestRepository>();
+            services.AddScoped<IAdoptionRequestService, AdoptionRequestService>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<INotificationService, NotificationService>();
 
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IChatRepository, ChatRepository>();

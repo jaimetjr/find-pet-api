@@ -21,6 +21,8 @@ namespace Infrastructure.Data
         public DbSet<ChatRoom> ChatRooms => Set<ChatRoom>();
         public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
         public DbSet<PetFavorite> PetFavorites => Set<PetFavorite>();
+        public DbSet<AdoptionRequest> AdoptionRequests => Set<AdoptionRequest>();
+        public DbSet<Notification> Notifications => Set<Notification>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

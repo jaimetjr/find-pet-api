@@ -65,6 +65,9 @@ namespace Domain.Entities
         public DateTime UpdatedAt { get; private set; }
         public ICollection<Pet> Pets { get; private set; }
         public ICollection<Provider> Providers { get; private set; }
+        public ICollection<AdoptionRequest> OwnerAdoptionRequests { get; private set; }
+        public ICollection<AdoptionRequest> AdopterAdoptionRequests { get; private set; }
+        public ICollection<Notification> Notification { get; private set; }
 
         private User() { }
 
@@ -81,6 +84,9 @@ namespace Domain.Entities
             UpdatedAt = DateTime.UtcNow;
             ApprovalStatus = ApprovalStatus.Pending;
             Providers = new List<Provider>();
+            OwnerAdoptionRequests = new List<AdoptionRequest>();
+            AdopterAdoptionRequests = new List<AdoptionRequest>();
+            Notification = new List<Notification>();
         }
 
         public void SetAdditionalInfo(string phone, string bio, string clerkId, ContactType contactType, DateTime birthDate)
