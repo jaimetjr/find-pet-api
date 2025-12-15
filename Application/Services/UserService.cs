@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.User;
 using Application.Helpers;
-using Application.Interfaces.Repositories;
+using Domain.Interfaces.Repositories;
+using Domain.Specifications.User;
 using Application.Interfaces.Services;
 using Application.Resources;
 using AutoMapper;
@@ -25,7 +26,9 @@ namespace Application.Services
 
         public async Task<User?> AuthWithEmailAsync(LoginUserDto login)
         {
-            var user = await _userRepository.GetByEmailAsync(login.Email);
+            var spec = new UserByEmailSpecification(login.Email)
+                .WithProviders();
+            var user = await _userRepository.GetSingleAsync(spec);
             if (user == null || user.Providers == null)
                 return null;
 
@@ -42,7 +45,9 @@ namespace Application.Services
 
         public async Task<User?> GetByClerkIdAsync(string clerkId)
         {
-            var user = await _userRepository.GetByClerkIdAsync(clerkId);
+            var spec = new UserByClerkIdSpecification(clerkId)
+                .WithProviders();
+            var user = await _userRepository.GetSingleAsync(spec);
             if (user == null)
                 return null;
             return user;
@@ -50,7 +55,9 @@ namespace Application.Services
 
         public async Task<Result<string>> RegisterWithEmailAsync(RegisterUserDto register)
         {
-            var existingUser = await _userRepository.GetByEmailAsync(register.Email);
+            var emailSpec = new UserByEmailSpecification(register.Email)
+                .WithProviders();
+            var existingUser = await _userRepository.GetSingleAsync(emailSpec);
             if (existingUser != null)
                 return Result<string>.Fail(ValidationMessages.UserAlreadyExists);
 
@@ -123,7 +130,8 @@ namespace Application.Services
         {
             try
             {
-                var user = await _userRepository.GetByClerkIdAsync(clerkId);
+                var spec = new UserByClerkIdSpecification(clerkId);
+                var user = await _userRepository.GetSingleAsync(spec);
                 if (user == null)
                     return Result<UserDto>.Fail("Usuário não encontrado");
                 user.SetPushToken(expoPushToken);
@@ -141,7 +149,8 @@ namespace Application.Services
         {
             try
             {
-                var user = await _userRepository.GetByClerkIdAsync(userClerkId);
+                var spec = new UserByClerkIdSpecification(userClerkId);
+                var user = await _userRepository.GetSingleAsync(spec);
                 if (user == null)
                     return Result<string?>.Fail("Usuário não encontrado");
                 return Result<string?>.Ok(user.ExpoPushToken);
@@ -156,7 +165,8 @@ namespace Application.Services
         {
             try
             {
-                var users = await _userRepository.GetExpoTokenWithoutMe(clerkId);
+                var spec = new UserWithExpoTokenSpecification(clerkId);
+                var users = await _userRepository.ListAsync(spec);
                 if (users == null || users.Count == 0)
                     return Result<List<UserDto>>.Fail("Nenhum usuário encontrado");
                 var usersDto = _mapper.Map<List<UserDto>>(users);

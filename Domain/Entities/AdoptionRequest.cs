@@ -1,8 +1,9 @@
-﻿using Domain.Enums;
+﻿using Domain.Abstractions;
+using Domain.Enums;
 
 namespace Domain.Entities;
 
-public class AdoptionRequest : Entity
+public class AdoptionRequest : AggregateRoot
 {
     public Guid PetId { get; set; }
     public Pet Pet { get; set; }

@@ -97,7 +97,20 @@ builder.Services.AddSwaggerGen(c =>
             }
         });
 });
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    // Increase server timeout to 60 seconds
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);
+    
+    // Send keep-alive ping every 15 seconds
+    options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+    
+    // Increase handshake timeout
+    options.HandshakeTimeout = TimeSpan.FromSeconds(30);
+    
+    // Enable detailed error messages (for debugging)
+    options.EnableDetailedErrors = true;
+});
 
 var app = builder.Build();
 

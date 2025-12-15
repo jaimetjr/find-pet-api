@@ -1,6 +1,6 @@
 ﻿using Application.DTOs.Chat;
 using Application.Helpers;
-using Application.Interfaces.Repositories;
+using Domain.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Domain.Entities.Chat;
 using System;

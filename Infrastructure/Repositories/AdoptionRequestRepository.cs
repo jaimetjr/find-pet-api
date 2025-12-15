@@ -1,22 +1,17 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Domain.Interfaces.Repositories;
 using Domain.Entities;
 using Domain.Enums;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories;
 
 public class AdoptionRequestRepository(AppDataContext context) : Repository<AdoptionRequest>(context), IAdoptionRequestRepository
 {
-    public async Task<AdoptionRequest?> CheckAdoptionStatus(Guid petId, string userId)
+    public async Task<AdoptionRequest?> CheckAdoptionStatus(Guid petId, string userId, CancellationToken ct = default)
     {
         return await _context.AdoptionRequests
-            .FirstOrDefaultAsync(ar => ar.PetId == petId && ar.AdopterClerkId == userId && ar.Active);
+            .FirstOrDefaultAsync(ar => ar.PetId == petId && ar.AdopterClerkId == userId && ar.Active, ct);
     }
 
     /// <summary>
@@ -24,7 +19,7 @@ public class AdoptionRequestRepository(AppDataContext context) : Repository<Adop
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public async Task<IEnumerable<AdoptionRequest>> GetReceived(string userId)
+    public async Task<IEnumerable<AdoptionRequest>> GetReceived(string userId, CancellationToken ct = default)
     {
         var statusDesired = new List<AdoptionRequestStatus>
         {
@@ -38,18 +33,18 @@ public class AdoptionRequestRepository(AppDataContext context) : Repository<Adop
                                && statusDesired.Contains(ar.Status))
                         .Include(ar => ar.Pet)
                         .Include(ar => ar.Adopter)
-                        .ToListAsync();
+                        .ToListAsync(ct);
         return request;
     }
 
-    public async Task<IEnumerable<AdoptionRequest>> GetByAdopterIdAsync(string adopterClerkId)
+    public async Task<IEnumerable<AdoptionRequest>> GetByAdopterIdAsync(string adopterClerkId, CancellationToken ct = default)
     {
         var request = await _context.AdoptionRequests
                                     .Where(x => x.AdopterClerkId == adopterClerkId)
                                     .Include(x => x.Pet)
                                     .Include(x => x.Owner)
                                     .OrderByDescending(x => x.CreatedAt)
-                                    .ToListAsync();
+                                    .ToListAsync(ct);
         return request;
     }
 }

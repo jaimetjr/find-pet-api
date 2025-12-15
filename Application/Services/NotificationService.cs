@@ -1,6 +1,6 @@
 ﻿using Application.DTOs.Notification;
 using Application.Helpers;
-using Application.Interfaces.Repositories;
+using Domain.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using AutoMapper;
 using Domain.Entities;

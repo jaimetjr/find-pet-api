@@ -1,6 +1,8 @@
 ﻿using Application.DTOs.Pet;
 using Application.Helpers;
-using Application.Interfaces.Repositories;
+using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
+using Domain.Specifications.Pet;
 using Application.Interfaces.Services;
 using AutoMapper;
 using Domain.Entities;
@@ -96,7 +98,9 @@ namespace Application.Services
             
             try
             {
-                var pets = await _petRepository.GetAllPetsByUserId(userId);
+                var spec = new PetByUserIdSpecification(userId)
+                    .WithAllIncludes();
+                var pets = await _petRepository.ListAsync(spec);
                 var petDtos = _mapper.Map<List<PetDto>>(pets);
                 
                 _loggingService.LogInformation("Retrieved {PetCount} pets for user {UserId}", 
@@ -117,7 +121,11 @@ namespace Application.Services
 
             try
             {
-                var pets = await _petRepository.GetAllPets();
+                var spec = new PetWithImagesSpecification()
+                    .WithBreed()
+                    .WithType()
+                    .WithFavorites();
+                var pets = await _petRepository.ListAsync(spec);
                 var petDtos = _mapper.Map<List<PetDto>>(pets);
 
                 _loggingService.LogInformation("Retrieved {PetCount} pets",
@@ -146,7 +154,9 @@ namespace Application.Services
 
         public async Task<Result<PetDto>> GetPetAsync(Guid id)
         {
-            var pet = await _petRepository.GetByPetIdAsync(id);
+            var spec = new PetByIdSpecification(id)
+                .WithAllIncludes();
+            var pet = await _petRepository.GetSingleAsync(spec);
             if (pet == null)
                 return Result<PetDto>.Fail("Pet not found");
             return Result<PetDto>.Ok(_mapper.Map<PetDto>(pet));

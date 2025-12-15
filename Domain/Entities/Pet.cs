@@ -1,8 +1,9 @@
-﻿using Domain.Enums;
+﻿using Domain.Abstractions;
+using Domain.Enums;
 
 namespace Domain.Entities
 {
-    public sealed class Pet : Entity
+    public sealed class Pet : AggregateRoot
     {
         public string ClerkId { get; private set; }
         public string Name { get; private set; }

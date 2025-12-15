@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Domain.Abstractions;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public sealed class User
+    public sealed class User : AggregateRoot
     {
-        public Guid Id { get; private set; }
         public string ClerkId { get; private set; }
         public string Email { get; private set; }
         public string Name { get; private set; }
@@ -61,8 +61,6 @@ namespace Domain.Entities
         public ContactType ContactType { get; private set; }
         public ApprovalStatus ApprovalStatus { get; private set; }
         public UserRole Role { get; private set; } = UserRole.User;
-        public DateTime CreatedAt { get; private set; }
-        public DateTime UpdatedAt { get; private set; }
         public ICollection<Pet> Pets { get; private set; }
         public ICollection<Provider> Providers { get; private set; }
         public ICollection<AdoptionRequest> OwnerAdoptionRequests { get; private set; }
@@ -87,6 +85,7 @@ namespace Domain.Entities
             OwnerAdoptionRequests = new List<AdoptionRequest>();
             AdopterAdoptionRequests = new List<AdoptionRequest>();
             Notification = new List<Notification>();
+            Pets = new List<Pet>();
         }
 
         public void SetAdditionalInfo(string phone, string bio, string clerkId, ContactType contactType, DateTime birthDate)

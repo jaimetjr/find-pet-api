@@ -67,6 +67,7 @@ public class AdoptionRequestController : BaseController
     [HttpPatch("{id}/status")]
     public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateAdoptionRequestDto dto)
     {
+        dto.Id = id;
         var result = await _adoptionRequestService.UpdateAdoptionRequestStatus(dto);
         return HandleResult(result);
     }
